@@ -1,21 +1,15 @@
 import { Body, Controller, 
-  // Post, Body, Request, UseGuards,
-   Get, Param, Patch,
-    // Post
-   } from '@nestjs/common';
+   Get, Param, Patch } from '@nestjs/common';
 import {
-  // ApiBadRequestResponse,
-  // ApiCreatedResponse,
-  // ApiOkResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 import { Roles } from 'src/guards/roles.guard';
 import { Role } from 'src/shared/enums/role.enum';
+import { PushNotificationDto } from './dto/push-notification.dto';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
 import { UpdateJobseekerProfileDto } from './dto/update-jobseeker-profile.dto';
-// import { LocalAuthGuard } from 'src/guards/local-auth.guard';
-// import { Public } from 'src/shared/decorators/auth/public.decorator';
 import { UserService } from './user.service';
 
 
@@ -25,10 +19,15 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
 
+  @ApiOkResponse({
+    status: 200 || 201,
+    description: 'Get one user successfully',
+  })
   @Get()
   findAll() {
     return this.userService.findAll();
   }
+  
   // @ApiOkResponse({
   //   status: 200 || 201,
   //   description: 'Get one user successfully',
@@ -55,10 +54,9 @@ export class UserController {
     return this.userService.updateJobseekerProfile(id, updateJobseekerProfileDto);
   }
 
-  // @Post('push-notification/:userID')
-  // @Roles(Role.Company)
-  // pushNotificationJobseeker(@Param('userID') id: Types.ObjectId, @Body() updateJobseekerProfileDto: UpdateJobseekerProfileDto) {
-  //   return this.userService.pushNotificationJobseeker(id, updateJobseekerProfileDto);
-  // }
+  @Patch('push-notification/:userID')
+  pushNotification(@Param('userID') id: Types.ObjectId, @Body() pushNotificationDto: PushNotificationDto) {
+    return this.userService.pushNotification(id, pushNotificationDto);
+  }
 
 }

@@ -2,7 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { emptyDocument } from 'src/shared/db-error-handling/empty-document.middleware';
+// import { Role } from 'src/shared/enums/role.enum';
 import { cleanObject } from 'src/shared/util/clean-object.util';
+import { PushNotificationDto } from './dto/push-notification.dto';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
 import { UpdateJobseekerProfileDto } from './dto/update-jobseeker-profile.dto';
 import { UserDocument, User } from './entities/user.entity';
@@ -47,9 +49,45 @@ export class UserService {
   }
 
 
-  // async pushNotificationJobseeker(userID: Types.ObjectId, updateJobseekerProfileDto: UpdateJobseekerProfileDto): Promise<User | null> {
-    
-  //   return 0;
-  // }
+  async pushNotification(userID: Types.ObjectId, pushNotificationDto: PushNotificationDto): Promise<User | null> {
+
+    /// Ex.: Notification for Jobseeker about:: Having an interview/feedback and save it in the history
+    const pushNotification = await this.userModel
+    .findByIdAndUpdate(userID, { $push: {
+      "notifications": {
+          "senderID": pushNotificationDto.senderID,
+          "type": pushNotificationDto.type,
+          "senderName": pushNotificationDto.senderName,
+          "title": pushNotificationDto.title,
+          "body": pushNotificationDto.body,
+          "location": pushNotificationDto.location,
+          "link": pushNotificationDto.link,
+          "interviewStart": pushNotificationDto.interviewStart,
+          "interviewEnd": pushNotificationDto.interviewEnd,
+          "position": pushNotificationDto.position,
+          "isAccepted": pushNotificationDto.isAccepted,
+        }}}).setOptions({ overwrite: false });
+        emptyDocument(pushNotification, 'user');
+
+        /// Ex.: Notification for company about:: Save req interview/feedback in to Company history
+        const saveInToHistory = await this.userModel
+    .findByIdAndUpdate(pushNotificationDto.senderID, { $push: {
+      "notifications": {
+          "senderID": userID,
+          "type": pushNotificationDto.type,
+          "senderName": pushNotificationDto.senderName,
+          "title": pushNotificationDto.title,
+          "body": pushNotificationDto.body,
+          "location": pushNotificationDto.location,
+          "link": pushNotificationDto.link,
+          "interviewStart": pushNotificationDto.interviewStart,
+          "interviewEnd": pushNotificationDto.interviewEnd,
+          "position": pushNotificationDto.position,
+          "isAccepted": pushNotificationDto.isAccepted,
+        }}}).setOptions({ overwrite: false });
+        emptyDocument(saveInToHistory, 'user');
+
+    return pushNotification;
+  }
 
 }
