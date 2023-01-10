@@ -2,18 +2,18 @@
  * @param param any string to check if it may be null
  * @returns true if is null, false otherwise
  */
-export const checkNullability = (param: string | number) => {
+ export const checkNullability = (param) => {
   return param != null &&
     param != '' &&
     param != undefined &&
     param != 'null' &&
-    param != 'undefined' &&
-    param != 0
-    ? isNaN(param as number)
+    param != 'undefined'
+    ? isNaN(param)
       ? param
       : +param
     : null;
 };
+
 
 export const checkObjectNullability = (obj: any): boolean => {
   return (
@@ -24,5 +24,5 @@ export const checkObjectNullability = (obj: any): boolean => {
 };
 
 export const checkArrayNullability = (arr: any): boolean => {
-  return arr && arr?.length > 0;
+  return arr && arr?.length > 0 && !(arr?.length === 1 && arr[0] == '');
 };
