@@ -1,12 +1,15 @@
 import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import { Model, Types } from 'mongoose';
-import { PopularPositions, PopularPositionsDocument } from 'src/modules/popular-positions/entities/popular-position.entity';
-import { PopularSkills, PopularSkillsDocument } from 'src/modules/popular-skills/entities/popular-skill.entity';
+import {  PopularPositionsDocument } from 'src/modules/popular-positions/entities/popular-position.entity';
+import {  PopularSkillsDocument } from 'src/modules/popular-skills/entities/popular-skill.entity';
 import { emptyDocument } from 'src/shared/db-error-handling/empty-document.middleware';
 import { Role } from 'src/shared/enums/role.enum';
-import { checkArrayNullability, checkNullability } from 'src/shared/util/check-nullability.util';
+import { 
+  checkArrayNullability, 
+  checkNullability 
+} from 'src/shared/util/check-nullability.util';
 import { cleanObject } from 'src/shared/util/clean-object.util';
 import { FilterJobseekersDto } from './dto/filter-jobseekers.dto';
 import { PushNotificationDto } from './dto/push-notification.dto';
@@ -18,8 +21,8 @@ import { UserDocument, User } from './entities/user.entity';
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
-  @InjectModel(PopularSkills.name) private readonly popularSkillsModel: Model<PopularSkillsDocument>,
-    @InjectModel(PopularPositions.name) private readonly popularPositionsModel: Model<PopularPositionsDocument>
+  @InjectModel('popular-skills') private readonly popularSkillsModel: Model<PopularSkillsDocument>,
+    @InjectModel('popular-positions') private readonly popularPositionsModel: Model<PopularPositionsDocument>
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -135,18 +138,21 @@ export class UserService {
 
 
   async filterJobSeekers(query: FilterJobseekersDto): Promise<User[]> {
-    let { gender, minAge, maxAge, skills, isExperienced, positions, languages, location, typeOfWork } = query;
+    let { gender,
+      //  minAge, maxAge,
+       skills, months, years, positions, languages, location, typeOfWork } = query;
 
     gender = gender?.trim();
     
-    minAge = minAge?.trim();
-    maxAge = maxAge?.trim();
+    // const min = Number(minAge?.trim());
+    // const max = Number(maxAge?.trim());
     
+    months = Number(months);
+    years = Number(years);
     location = location?.trim();
-    isExperienced = isExperienced?.trim();
     typeOfWork = typeOfWork?.trim();
-    skills = (skills as unknown as string)?.trim().split(',') ?? [''];
-    positions = (positions as unknown as string)?.trim().split(',') ?? [''];
+    skills = (skills as unknown as string)?.trim().split(',') ?? [];
+    positions = (positions as unknown as string)?.trim().split(',') ?? [];
     languages = (languages as unknown as string)?.trim().split(',') ?? [''];
 
     for(let i = 0; i < skills.length; ++i) {
@@ -157,14 +163,25 @@ export class UserService {
       await new this.popularPositionsModel({ positions: positions[i].trim(), filterDate: new Date }).save();
     }
 
-    const currentDate = new Date();
-    let minDob: Date;
-    let maxDob: Date;
-    if(checkNullability(minAge) && checkNullability(maxAge)){
-      minDob = moment(currentDate).subtract(maxAge, 'years').toDate();
-      maxDob = moment(currentDate).subtract(minAge, 'years').toDate();
-    }
-    
+    // const currentDate = new Date();
+    // const dateYear = new Date(moment(`${currentDate.getFullYear() - min}/01/01`).format('yyyy-MM-DD'));
+
+    // console.log(`${typeof dateYear} ===== ${dateYear}`);
+
+    // const year = 1000*60*60*24*365.25;
+    // let minDob: Date;
+    // let maxDob: Date;
+    // if(checkNullability(minAge) && checkNullability(maxAge)){
+    //   minDob = moment(currentDate).subtract(maxAge, 'years').toDate();
+    //   console.log(minDob);
+    //   maxDob = moment(currentDate).subtract(minAge, 'years').toDate();
+    //   console.log(maxDob);
+    // }
+
+    // const minDob = new Date(new Date().setFullYear(new Date().getFullYear() - min));
+    // const maxDob = new Date(new Date().setFullYear(new Date().getFullYear() - max));
+    // const thisYear = new Date().getFullYear;
+
     const filteredJobseekers = await this.userModel.find({
       $and: [
         { role: Role.Jobseeker },
@@ -179,20 +196,48 @@ export class UserService {
         checkNullability(typeOfWork) ? { typeOfWork : { $eq: typeOfWork } } : {},
 
         // // * Done * //
-        // { dob: { $gte: minDob, $lte: maxDob } },
+        // { 
+        //   dob: { 
+        //     $and: [
+        //       { $gte: [ { $subtract: [ currentDate, '$dob' ] }, min ] },
+        //       { $lte: [ { $subtract: [ currentDate, '$dob' ] }, max ] },
+        //     ]   
+        //   }
+        // },
+        
+        // {
+        //   $expr: {
+        //     $and: [
+        //       { $gte: [{ $divide: [{ $subtract: [moment().toDate(), '$dob'] }, 31536000000] }, min] },
+        //       { $lte: [{ $divide: [{ $subtract: [moment().toDate(), '$dob'] }, 31536000000] }, max] },
+        //     ],
+        //   },
+        // },
+
+        // min != 0 && max != 0 ?
+        // {
+        //   dob:
+        //     {
+        //       $gt: {
+        //         $subtract: [thisYear, "$dob"]
+        //       }, $lt: [thisYear, "$dob"]
+        //     }
+        // } : {},
+        
 
         // * Done * //
         checkArrayNullability(skills) ? { "skills.skillName": { $in: skills } } : {},
         checkArrayNullability(skills) ? { "skills.isDeleted": false } : {},
 
         // * Done * //
-        checkArrayNullability(languages) ? { "languages.languageName": { $in: languages } } : {},
+        checkArrayNullability(languages) ? { "languages.langName": { $in: languages } } : {},
 
-        // // * Done * //
-        // checkArrayNullability(positions) ? { wantedPositions: { $in: positions } } : {},
+        // * Done * //
+        checkArrayNullability(positions) ? { wantedPositions: { $in: positions } } : {},
 
-        // // * Done * //
-        // checkNullability(isExperienced) ? { "experiences.companyName": { $exists: true } } : {},
+        // * Done * //
+        checkNullability(years) ? { "experiences.years": { $gte: years } } : {},
+        checkNullability(months) ? { "experiences.months": { $gte: months } } : {},
       ]
     });
     return filteredJobseekers;

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBooleanString, IsOptional, IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class FilterJobseekersDto {
   @IsOptional()
@@ -19,10 +19,11 @@ export class FilterJobseekersDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsBooleanString()
-  // @Transform()
-  // 1: experience || 2: no experience
-  readonly isExperienced?: string
+  readonly years?: number
+
+  @ApiProperty()
+  @IsOptional()
+  readonly months?: number
 
   @ApiProperty()
   @IsOptional()
