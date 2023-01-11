@@ -3,7 +3,7 @@ export interface Experiences {
   years: number;
   name: string;
   companyName: string;
-  descreption: string;
+  description: string;
   startTime: Date;
   endTime: Date;
 }

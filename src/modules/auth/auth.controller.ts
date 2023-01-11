@@ -7,8 +7,8 @@ import {
 } from '@nestjs/swagger';
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { Public } from 'src/shared/decorators/auth/public.decorator';
-import { CreateCompanyDto } from '../system-users/user/dto/create-company.dto';
-import { CreateJobseekerDto } from '../system-users/user/dto/create-jobseeker.dto';
+import { CreateCompanyDto } from '../system-users/company/dto/create-company.dto';
+import { CreateJobSeekerDto } from '../system-users/job-seeker/dto/create-job-seeker.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 
@@ -23,11 +23,10 @@ export class AuthController {
   })
   @ApiBadRequestResponse({ status: 400, description: 'If Email Exists.' })
   @Public()
-  @Post('register-jobseeker')
-  registerJobseeker(@Body() createJobseekerDto: CreateJobseekerDto) {
+  @Post('register-job-seeker')
+  registerJobseeker(@Body() createJobseekerDto: CreateJobSeekerDto) {
     return this.authService.registerJobseeker(createJobseekerDto);
   }
-
 
   @ApiCreatedResponse({
     status: 201,

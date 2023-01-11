@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "_id": "4bcab69c-019a-45ce-b4c7-9452ae596672",
+    "colId": "history",
+    "containerId": "",
+    "name": "localhost:3000/api",
+    "url": "localhost:3000/api/auth/login",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2023-01-11T20:17:23.780Z",
+    "modified": "2023-01-11T20:22:00.387Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\": \"mutlaqalsadeed@gmail.com\",\n  \"password\": \"Mutlaq_12345\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "6dc6555e-741f-41fd-82d9-1045cd3f05a5",
+    "colId": "history",
+    "containerId": "",
+    "name": "localhost:3000/api/auth/register-job-seeker",
+    "url": "localhost:3000/api/auth/register-job-seeker",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2023-01-11T20:17:38.775Z",
+    "modified": "2023-01-11T20:20:52.072Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\": \"mutlaqalsadeed@gmail.com\",\n  \"password\": \"Mutlaq_12345\",\n  \"name\": \"Mutlaq\",\n  \"phone\": \"0795367929\",\n  \"dob\":\"07/12/2000\",\n  \"gender\": \"m\"\n}",
+      "form": []
+    },
+    "tests": []
+  }
+]

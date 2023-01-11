@@ -1,10 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional } from "class-validator";
-
-
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class PushNotificationDto {
-
   @ApiProperty({
     description: 'feedback / interview / report',
     example: 'feedback OR interview OR report',
@@ -13,7 +11,7 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly type: string = "";
+  readonly type!: string;
 
   @ApiProperty({
     description: 'Company object ID',
@@ -23,8 +21,8 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly senderID: string = "";
-  
+  readonly senderID!: Types.ObjectId;
+
   @ApiProperty({
     description: 'Company Name',
     example: 'companyName',
@@ -33,8 +31,7 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly senderName: string = "";
-
+  readonly senderName!: string;
 
   @ApiProperty({
     description: 'Title Name',
@@ -44,8 +41,7 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly title: string = "";
-
+  readonly title!: string;
 
   @ApiProperty({
     description: 'Description',
@@ -55,8 +51,7 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly body: string = "";
-
+  readonly body!: string;
 
   @ApiProperty({
     description: 'Location of interview',
@@ -66,7 +61,7 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly location: string = "";
+  readonly location!: string;
 
   @ApiProperty({
     description: 'link of interview',
@@ -76,8 +71,8 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly link: string = "";
-  
+  readonly link!: string;
+
   @ApiProperty({
     description: 'Interview starting time',
     example: '2023-01-23 13:00:00',
@@ -86,7 +81,7 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly interviewStart: string = "";
+  readonly interviewStart!: string;
 
   @ApiProperty({
     description: 'Interview starting time',
@@ -96,8 +91,7 @@ export class PushNotificationDto {
     type: 'string',
   })
   @IsOptional()
-  readonly interviewEnd: string = "";
-
+  readonly interviewEnd!: string;
 
   @ApiProperty({
     description: 'Position',
@@ -107,7 +101,7 @@ export class PushNotificationDto {
     type: 'String',
   })
   @IsOptional()
-  readonly position: string = "";
+  readonly position!: string;
 
   @ApiProperty({
     description: 'Is Jobseeker Accepted',
@@ -117,5 +111,5 @@ export class PushNotificationDto {
     type: 'String',
   })
   @IsOptional()
-  readonly isAccepted: string = "";
+  readonly isAccepted!: string;
 }

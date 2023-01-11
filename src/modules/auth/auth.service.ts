@@ -7,10 +7,9 @@ import { ReturnMessage } from 'src/shared/interfaces/return-message.interface';
 import { Payload } from 'src/shared/interfaces/token-payload.interface';
 import { UserDocument, User } from '../system-users/user/entities/user.entity';
 import { UserService } from '../system-users/user/user.service';
-import { CreateJobseekerDto } from '../system-users/user/dto/create-jobseeker.dto';
+import { CreateJobSeekerDto } from '../system-users/job-seeker/dto/create-job-seeker.dto';
 import { Role } from 'src/shared/enums/role.enum';
-import { registerUser } from 'src/shared/util/register-user.util';
-import { CreateCompanyDto } from '../system-users/user/dto/create-company.dto';
+import { CreateCompanyDto } from '../system-users/company/dto/create-company.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,16 +21,26 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async registerJobseeker(createJobseekerDto: CreateJobseekerDto): Promise<ReturnMessage> {
+  async registerJobseeker(
+    createJobseekerDto: CreateJobSeekerDto,
+  ): Promise<ReturnMessage> {
     const user = new this.userModel(createJobseekerDto);
     user.role = Role.Jobseeker;
-    return await registerUser(user);
+    const salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(user.password, salt);
+    await user.save();
+    return { message: 'auth.success.register', statusCode: 201 };
   }
 
-  async registerCompany(createCompanyDto: CreateCompanyDto): Promise<ReturnMessage> {
+  async registerCompany(
+    createCompanyDto: CreateCompanyDto,
+  ): Promise<ReturnMessage> {
     const user = new this.userModel(createCompanyDto);
     user.role = Role.Company;
-    return await registerUser(user);
+    const salt = await bcrypt.genSalt();
+    user.password = await bcrypt.hash(user.password, salt);
+    await user.save();
+    return { message: 'auth.success.register', statusCode: 201 };
   }
 
   async login(req: any): Promise<{ token: string }> {

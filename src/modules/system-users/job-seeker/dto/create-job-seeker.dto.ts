@@ -20,8 +20,7 @@ import { Experiences } from 'src/shared/interfaces/experiences.interface';
 import { Languages } from 'src/shared/interfaces/languages.interface';
 import { Skills } from 'src/shared/interfaces/skills.interface';
 
-export class CreateJobseekerDto {
-
+export class CreateJobSeekerDto {
   @ApiProperty({
     description: "Jobseeker's Email when registering",
     example: 'ammaromari@gmail.com',
@@ -46,7 +45,6 @@ export class CreateJobseekerDto {
   })
   @Unique('email')
   email!: string;
-
 
   @ApiProperty({
     description: 'Jobseeker password when registering',
@@ -86,9 +84,8 @@ export class CreateJobseekerDto {
   @PasswordContainsUppercaseLetter()
   password!: string;
 
-
   @ApiProperty({
-    description: 'Jobseekers Full name',
+    description: 'JobSeekers Full name',
     example: 'Ammar Omari',
     name: 'fullName',
     required: true,
@@ -113,9 +110,8 @@ export class CreateJobseekerDto {
   })
   name!: string;
 
-
   @ApiProperty({
-    description: 'Jobseekers Phone',
+    description: 'JobSeekers Phone',
     example: '791234567',
     name: 'phone number',
     required: true,
@@ -140,7 +136,7 @@ export class CreateJobseekerDto {
   phone!: string;
 
   @ApiProperty({
-    description: "Jobseeker birthday",
+    description: 'Jobseeker birthday',
     type: 'date string',
     required: true,
     example: '2000-07-12',
@@ -154,9 +150,8 @@ export class CreateJobseekerDto {
   })
   dob!: string;
 
-
   @ApiProperty({
-    description: 'Jobseekers gender',
+    description: 'JobSeekers gender',
     example: 'f OR m',
     name: 'gender',
     required: true,
@@ -164,16 +159,14 @@ export class CreateJobseekerDto {
     minLength: 1,
     maxLength: 1,
   })
-  @IsIn(["m", "f"])
+  @IsIn(['m', 'f'])
   @IsNotEmpty()
   @IsString()
   @Length(1)
   gender!: string;
 
-
-
   @ApiProperty({
-    description: 'Jobseekers bio',
+    description: 'JobSeekers bio',
     example: 'bio bio bio ...',
     name: 'bio',
     required: false,
@@ -181,21 +174,22 @@ export class CreateJobseekerDto {
   })
   @IsString()
   @IsOptional()
-  bio: string = "";
-
-
+  bio: string = '';
 
   @ApiProperty({
-    description: 'Jobseekers notifications',
-    examples: [{
-      'any': 'any',
-      'any1': 'any1',
-      'moreAny': 'moreAny'
-    }, {
-      'skillName': 'string',
-      'any1': 'any1',
-      'moreAny': 'moreAny'
-    }],
+    description: 'JobSeekers notifications',
+    examples: [
+      {
+        any: 'any',
+        any1: 'any1',
+        moreAny: 'moreAny',
+      },
+      {
+        skillName: 'string',
+        any1: 'any1',
+        moreAny: 'moreAny',
+      },
+    ],
     name: 'notifications',
     required: false,
     isArray: true,
@@ -204,10 +198,8 @@ export class CreateJobseekerDto {
   @IsOptional()
   notifications: any[] = [];
 
-
-
   @ApiProperty({
-    description: 'Jobseekers wantedPositions',
+    description: 'JobSeekers wantedPositions',
     examples: ['position 1', 'position 2'],
     name: 'wantedPositions',
     required: false,
@@ -217,81 +209,79 @@ export class CreateJobseekerDto {
   @IsOptional()
   wantedPositions: string[] = [];
 
-
-
   @ApiProperty({
-    description: 'Jobseekers languages',
-    examples: [{
-      'languageName': 'string',
-      'languageValue': 'number'
-    }, {
-      'languageName': 'string',
-      'languageValue': 'number'
-    }],
+    description: 'JobSeekers languages',
+    examples: [
+      {
+        languageName: 'string',
+        languageValue: 'number',
+      },
+      {
+        languageName: 'string',
+        languageValue: 'number',
+      },
+    ],
     name: 'languages',
     required: false,
     isArray: true,
     type: 'array',
   })
   @IsOptional()
-  languages: Languages[] = []
-
-
-
+  languages: Languages[] = [];
 
   @ApiProperty({
-    description: 'Jobseekers experiences',
-    examples: [{
-      'months': 'number',
-      'years': 'number',
-      'name': 'string',
-      'companyName': 'string',
-      'descreption': 'string',
-      'startTime': 'Date',
-      'endTime': 'Date'
-    }, {
-      'months': 'number',
-      'years': 'number',
-      'name': 'string',
-      'companyName': 'string',
-      'descreption': 'string',
-      'startTime': 'Date',
-      'endTime': 'Date'
-    }],
+    description: 'JobSeekers experiences',
+    examples: [
+      {
+        months: 'number',
+        years: 'number',
+        name: 'string',
+        companyName: 'string',
+        description: 'string',
+        startTime: 'Date',
+        endTime: 'Date',
+      },
+      {
+        months: 'number',
+        years: 'number',
+        name: 'string',
+        companyName: 'string',
+        description: 'string',
+        startTime: 'Date',
+        endTime: 'Date',
+      },
+    ],
     name: 'experiences',
     required: false,
     isArray: true,
     type: 'array',
   })
   @IsOptional()
-  experiences: Experiences[] = []
-  
-  
-  
+  experiences: Experiences[] = [];
+
   @ApiProperty({
-    description: 'Jobseekers typeOfWork',
-    examples: ['full time', 'part time', 'internship/traning', 'freelancer'],
+    description: 'JobSeekers typeOfWork',
+    examples: ['full time', 'part time', 'internship/training', 'freelancer'],
     name: 'typeOfWork',
     required: false,
     type: 'string',
   })
   @IsOptional()
-  typeOfWork: string[] = []
+  typeOfWork: string[] = [];
 
   @ApiProperty({
-    description: 'Jobseekers is remotly',
+    description: 'JobSeekers is remotely',
     example: 'y OR n',
-    name: 'isRemotly',
+    name: 'isRemotely',
     required: false,
     type: 'string',
   })
   @IsString()
   @IsOptional()
-  readonly isRemotly: string = "";
-
+  readonly isRemotely: string = '';
 
   @ApiProperty({
-    description: 'Jobseekers is Available',
+    description: 'JobSeekers is Available',
     example: 'y OR n',
     name: 'isAvailable',
     required: false,
@@ -299,45 +289,44 @@ export class CreateJobseekerDto {
   })
   @IsString()
   @IsOptional()
-  readonly isAvailable: string = "";
-
-
+  readonly isAvailable: string = '';
 
   @ApiProperty({
-    description: 'Jobseekers skills',
-    examples: [{
-      'skillName': 'string',
-      'skillValue': 'number',
-      'skillDate': 'Date',
-      'isDeleted': 'boolean'
-    }, {
-      'skillName': 'string',
-      'skillValue': 'number',
-      'skillDate': 'Date',
-      'isDeleted': 'boolean'
-    }],
+    description: 'JobSeekers skills',
+    examples: [
+      {
+        skillName: 'string',
+        skillValue: 'number',
+        skillDate: 'Date',
+        isDeleted: 'boolean',
+      },
+      {
+        skillName: 'string',
+        skillValue: 'number',
+        skillDate: 'Date',
+        isDeleted: 'boolean',
+      },
+    ],
     name: 'skills',
     required: false,
     isArray: true,
     type: 'string',
   })
   @IsOptional()
-  readonly skills: Skills[] = []
-
+  readonly skills: Skills[] = [];
 
   @ApiProperty({
-    description: 'Jobseekers skills',
+    description: 'JobSeekers skills',
     examples: ['nodejs', 'nestjs'],
     name: 'skills',
     required: false,
     type: 'string',
   })
   @IsOptional()
-  readonly levelOfEducation: string[] = []
-
+  readonly levelOfEducation: string[] = [];
 
   @ApiProperty({
-    description: 'Jobseekers education',
+    description: 'JobSeekers education',
     example: 'PSUT',
     name: 'education',
     required: false,
@@ -345,11 +334,10 @@ export class CreateJobseekerDto {
   })
   @IsString()
   @IsOptional()
-  readonly education: string = "";
-
+  readonly education: string = '';
 
   @ApiProperty({
-    description: 'Jobseekers nationality',
+    description: 'JobSeekers nationality',
     example: 'Jordanian',
     name: 'nationality',
     required: false,
@@ -357,5 +345,5 @@ export class CreateJobseekerDto {
   })
   @IsString()
   @IsOptional()
-  readonly nationality: string = "";
+  readonly nationality: string = '';
 }
