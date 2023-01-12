@@ -3,7 +3,6 @@ import { HydratedDocument } from 'mongoose';
 import { Role } from 'src/shared/enums/role.enum';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
 import { Languages } from 'src/shared/interfaces/languages.interface';
-import { Skills } from 'src/shared/interfaces/skills.interface';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -71,6 +70,7 @@ export class User {
     cast: 'Something with wrong with the notification',
   })
   notifications!: any[];
+
   /// ============================================================ ///
 
   @Prop({
@@ -114,13 +114,6 @@ export class User {
     cast: 'Something with wrong with the company website',
   })
   website!: string;
-
-  @Prop({
-    type: [String],
-    default: undefined,
-    cast: 'Something with wrong with the wantedPositions',
-  })
-  wantedPositions!: string[];
 
   @Prop({
     type: String,
@@ -168,13 +161,6 @@ export class User {
   })
   levelOfEducation!: string[];
 
-  @Prop({
-    type: [Object],
-    default: undefined,
-    cast: 'Something with wrong with the job-seeker skills',
-  })
-  skills!: Skills[];
-
   // y / n ===> if available go to typeOfWork
   @Prop({
     type: String,
@@ -187,11 +173,11 @@ export class User {
   // y / n
   @Prop({
     type: String,
-    length: [1, 'isRemotly must be 1 character'],
+    length: [1, 'isRemotely must be 1 character'],
     trim: true,
-    cast: 'Something with wrong with the isRemotly',
+    cast: 'Something with wrong with the isRemotely',
   })
-  isRemotly!: string;
+  isRemotely!: string;
 
   // 1: full time, 2: part time, 3: internship/traning, 4: freelancer
   @Prop({

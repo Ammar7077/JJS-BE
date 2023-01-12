@@ -10,7 +10,6 @@ import {
 import { i18nValidationMessage } from 'nestjs-i18n';
 import { Languages } from 'src/shared/interfaces/languages.interface';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
-import { Skills } from 'src/shared/interfaces/skills.interface';
 
 export class UpdateJobseekerProfileDto {
   @IsString({
@@ -50,9 +49,6 @@ export class UpdateJobseekerProfileDto {
   readonly bio: string;
 
   @IsOptional()
-  readonly wantedPositions: string[];
-
-  @IsOptional()
   readonly languages: Languages[];
 
   @IsOptional()
@@ -63,14 +59,11 @@ export class UpdateJobseekerProfileDto {
 
   @IsString()
   @IsOptional()
-  readonly isRemotly: string;
+  readonly isRemotely: string;
 
   @IsString()
   @IsOptional()
   readonly isAvailable: string;
-
-  @IsOptional()
-  readonly skills: Skills[];
 
   @ApiProperty({
     description: 'JobSeekers skills',

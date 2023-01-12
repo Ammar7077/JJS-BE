@@ -15,7 +15,7 @@ import { CreateCompanyDto } from '../system-users/company/dto/create-company.dto
 export class AuthService {
   constructor(
     // * Models
-    @InjectModel('User') private userModel: Model<UserDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     // * Services
     private readonly userService: UserService,
     private readonly jwtService: JwtService,

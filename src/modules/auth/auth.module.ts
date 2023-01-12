@@ -6,6 +6,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../system-users/user/user.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Skills, SkillsSchema } from 'src/shared/entities/skills.entity';
 
 @Module({
   controllers: [AuthController],
@@ -19,6 +21,7 @@ import { UserModule } from '../system-users/user/user.module';
         expiresIn: process.env.EXPIRES_IN,
       },
     }),
+    MongooseModule.forFeature([{ name: Skills.name, schema: SkillsSchema }]),
   ],
 })
 export class AuthModule {}

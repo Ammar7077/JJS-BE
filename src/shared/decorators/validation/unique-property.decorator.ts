@@ -8,7 +8,10 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Model } from 'mongoose';
-import { UserDocument } from 'src/modules/system-users/user/entities/user.entity';
+import {
+  User,
+  UserDocument,
+} from 'src/modules/system-users/user/entities/user.entity';
 
 /**
  * #### Custom Validator to check if the email exists or not
@@ -17,7 +20,7 @@ import { UserDocument } from 'src/modules/system-users/user/entities/user.entity
 @Injectable()
 export class UniquePropertyConstraint implements ValidatorConstraintInterface {
   constructor(
-    @InjectModel('User')
+    @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
 

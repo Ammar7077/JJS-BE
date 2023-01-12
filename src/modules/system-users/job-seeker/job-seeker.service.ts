@@ -1,6 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { Role } from 'src/shared/enums/role.enum';
 import {
   checkNullability,
@@ -8,7 +8,6 @@ import {
 } from 'src/shared/util/check-nullability.util';
 import { User, UserDocument } from '../user/entities/user.entity';
 import { FilterJobSeekersDto } from './dto/filter-job-seekers.dto';
-import { UpdateJobseekerSkillsDto } from './dto/update-job-seeker-skills.dto';
 
 @Injectable()
 export class JobSeekerService {
@@ -54,34 +53,26 @@ export class JobSeekerService {
     const filteredJobSeekers = await this.userModel.find({
       $and: [
         { role: Role.Jobseeker },
-
-        // * Done * //
         checkNullability(gender) ? { gender: { $eq: gender } } : {},
-
-        // * Done * //
         checkNullability(location) ? { location: { $eq: location } } : {},
-
-        // * Done * //
         checkNullability(typeOfWork) ? { typeOfWork: { $eq: typeOfWork } } : {},
 
-        // * Done * //
         checkArrayNullability(skills)
           ? { 'skills.skillName': { $in: skills } }
           : {},
+
         checkArrayNullability(skills) ? { 'skills.isDeleted': false } : {},
 
-        // * Done * //
         checkArrayNullability(languages)
           ? { 'languages.langName': { $in: languages } }
           : {},
 
-        // * Done * //
         checkArrayNullability(positions)
           ? { wantedPositions: { $in: positions } }
           : {},
 
-        // * Done * //
         checkNullability(years) ? { 'experiences.years': { $gte: years } } : {},
+
         checkNullability(months)
           ? { 'experiences.months': { $gte: months } }
           : {},
@@ -94,34 +85,5 @@ export class JobSeekerService {
     return this.userModel.find({
       role: Role.Jobseeker,
     });
-  }
-
-  async updateAndAddNewSkill(
-    id: Types.ObjectId,
-    updateJobseekerSkillsDto: UpdateJobseekerSkillsDto,
-  ) {
-    try {
-      new Types.ObjectId(`${id}`);
-    } catch (err) {
-      return { 'wrong id': id };
-    }
-    const updateSkill = await this.userModel
-      .findByIdAndUpdate(id, {
-        $push: {
-          skills: {
-            skillName: updateJobseekerSkillsDto.skillName,
-            skillValue: updateJobseekerSkillsDto.skillValue,
-            skillDate: new Date(),
-            isDeleted: false,
-          },
-        },
-      })
-      .setOptions({ overwrite: false });
-
-    if (!updateSkill) {
-      Logger.log(`update skills error`);
-      throw new NotFoundException();
-    }
-    return updateSkill;
   }
 }

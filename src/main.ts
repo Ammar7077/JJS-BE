@@ -94,3 +94,27 @@ bootstrap();
 //                     :,...........   ....:,...,.
 //                     ,,............. ...,1;,,,,.
 //                                         ..
+/**
+async addPopular(addPopularSkillsDto: AddPopularSkillsDto) {
+    try {
+      return await new this.popularSkillsModel(addPopularSkillsDto).save();
+    } catch (err: any) {
+      throw new HttpException('error add company', err);
+    };
+  }
+
+   @Post()
+  create(@Body() addPopularSkillsDto: AddPopularSkillsDto) {
+    return this.popularSkillsService.addPopular(addPopularSkillsDto);
+  }
+
+
+    @Post()
+  create(@Body() createPopularPositionDto: CreatePopularPositionDto) {
+    return this.popularPositionsService.create(createPopularPositionDto);
+  }
+
+  create(createPopularPositionDto: CreatePopularPositionDto) {
+    return 'This action adds a new popularPosition';
+  }
+*/
