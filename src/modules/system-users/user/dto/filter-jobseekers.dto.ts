@@ -41,4 +41,12 @@ export class FilterJobseekersDto {
   @ApiProperty()
   @IsOptional()
   readonly typeOfWork?: string
+
+  @ApiProperty()
+  @IsOptional()
+  readonly isRemotly?: string
+
+  @ApiProperty()
+  @IsOptional()
+  readonly isAvailable?: string
 }

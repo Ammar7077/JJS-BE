@@ -11,8 +11,7 @@ import { i18nValidationMessage } from 'nestjs-i18n';
 import { Languages } from 'src/shared/interfaces/languages.interface';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
 import { Skills } from 'src/shared/interfaces/skills.interface';
-
-
+import { Favorites } from 'src/shared/interfaces/favorite.interface';
 export class UpdateJobseekerProfileDto {
   
   @IsString({
@@ -29,7 +28,6 @@ export class UpdateJobseekerProfileDto {
   @IsOptional()
   readonly name!: string;
 
-
   @IsNumberString({
     message: i18nValidationMessage(
       'validation.userSignUpValidation.phoneNumber',
@@ -37,54 +35,43 @@ export class UpdateJobseekerProfileDto {
   })
   @IsOptional()
   readonly phone!: string;
-
   
   @IsString()
   @IsOptional()
   readonly dob!: string;
-
   
   @IsIn(["m", "f"])
   @IsString()
   @Length(1)
   @IsOptional()
   readonly gender!: string;
-
   
   @IsString()
   @IsOptional()
   readonly bio: string;
 
-
   @IsOptional()
   readonly wantedPositions: string[];
-
   
   @IsOptional()
   readonly languages: Languages[]
 
-
   @IsOptional()
   readonly experiences: Experiences[]
-  
-  
+    
   @IsOptional()
   readonly typeOfWork: string[]
-
   
   @IsString()
   @IsOptional()
   readonly isRemotly: string;
 
-
   @IsString()
   @IsOptional()
   readonly isAvailable: string;
 
-  
   @IsOptional()
   readonly skills: Skills[]
-
 
   @ApiProperty({
     description: 'Jobseekers skills',
@@ -95,7 +82,6 @@ export class UpdateJobseekerProfileDto {
   })
   @IsOptional()
   readonly levelOfEducation: string[]
-
 
   @ApiProperty({
     description: 'Jobseekers education',
@@ -108,7 +94,6 @@ export class UpdateJobseekerProfileDto {
   @IsOptional()
   readonly education: string;
 
-
   @ApiProperty({
     description: 'Jobseekers nationality',
     example: 'Jordanian',
@@ -119,4 +104,7 @@ export class UpdateJobseekerProfileDto {
   @IsString()
   @IsOptional()
   readonly nationality: string;
+
+  @IsOptional()
+  readonly favorites: Favorites[];
 }

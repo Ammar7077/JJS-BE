@@ -17,6 +17,7 @@ import { PasswordContainsSpecialCharacter } from 'src/shared/decorators/validati
 import { PasswordContainsUppercaseLetter } from 'src/shared/decorators/validation/password/uppercase-letters.decorator';
 import { Unique } from 'src/shared/decorators/validation/unique-property.decorator';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
+import { Favorites } from 'src/shared/interfaces/favorite.interface';
 import { Languages } from 'src/shared/interfaces/languages.interface';
 import { Skills } from 'src/shared/interfaces/skills.interface';
 
@@ -326,11 +327,11 @@ export class CreateJobseekerDto {
 
 
   @ApiProperty({
-    description: 'Jobseekers skills',
+    description: 'Jobseekers levelOfEducation',
     examples: ['nodejs', 'nestjs'],
-    name: 'skills',
+    name: 'levelOfEducation',
     required: false,
-    type: 'string',
+    type: 'levelOfEducation',
   })
   @IsOptional()
   readonly levelOfEducation: string[] = []
@@ -358,4 +359,35 @@ export class CreateJobseekerDto {
   @IsString()
   @IsOptional()
   readonly nationality: string = "";
+
+  @ApiProperty({
+    description: 'Jobseekers favorites',
+    examples: [
+      {
+        "id": "8415851845815",
+        "name": "Ammar Omari",
+        "email": "ammarEmail@gmail.com",
+      },
+      {
+        "id": "8415851845815",
+        "name": "Ammar Omari",
+        "email": "ammarEmail@gmail.com",
+      }],
+    name: 'favorites',
+    required: false,
+    type: 'Array',
+  })
+  @IsOptional()
+  readonly favorites: Favorites[] = []
+
+  @ApiProperty({
+    description: 'Jobseekers is Hidden',
+    example: 'y OR n',
+    name: 'isHidden',
+    required: false,
+    type: 'string',
+  })
+  @IsString()
+  @IsOptional()
+  readonly isHidden: string = "n";
 }

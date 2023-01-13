@@ -1,5 +1,6 @@
 import { Body, Controller, 
-   Get, Param, Patch, Post, Query } from '@nestjs/common';
+   Delete, 
+   Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiTags,
@@ -19,7 +20,6 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
 
   @ApiOkResponse({
     status: 200 || 201,
@@ -44,20 +44,22 @@ export class UserController {
   getAllJobseekers() {
     return this.userService.getAllJobseekers();
   }
-  
 
   @Get(':userID')
   findOne(@Param('userID') id: Types.ObjectId) {
     return this.userService.findOneByID(id);
   }
 
-  
+  @Patch('admin-hide-users/:userID')
+  hideUsersByAdmin(@Param('userID') userID: Types.ObjectId, @Body() isHidden) {
+    return this.userService.hideUsersByAdmin(userID, isHidden);
+  }
+
   @Patch('update-company-profile/:userID')
   @Roles(Role.Company)
   updateCompanyProfile(@Param('userID') id: Types.ObjectId, @Body() updateCompanyProfileDto: UpdateCompanyProfileDto) {
     return this.userService.updateCompanyProfile(id, updateCompanyProfileDto);
   }
-
 
   @Patch('update-jobseeker-profile/:userID')
   @Roles(Role.Jobseeker)
@@ -69,7 +71,16 @@ export class UserController {
   addAndUpdateNewSkill(@Param('jobseekerID') id: Types.ObjectId, @Body() updateJobseekerSkillsDto: UpdateJobseekerSkillsDto) {
     return this.userService.updateAndAddNewSkill(id, updateJobseekerSkillsDto);
   }
-  
+
+  @Post('favorites/:userID')
+  addToFavorites(@Param('userID') id: Types.ObjectId, @Req() req: any) {
+    return this.userService.addToFavorites(id, req.user.sub);
+  }
+
+  @Delete('favorites/:userID')
+  deleteFromFavorites(@Param('userID') id: Types.ObjectId, @Body() body) {
+    return this.userService.deleteFromFavorites(id, body);
+  }
 
   @Post('push-notification/:userID')
   pushNotification(@Param('userID') id: Types.ObjectId, @Body() pushNotificationDto: PushNotificationDto) {

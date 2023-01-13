@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import { Role } from 'src/shared/enums/role.enum';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
 import { Languages } from 'src/shared/interfaces/languages.interface';
@@ -74,8 +74,6 @@ export class User {
     cast: "Something with wrong with the notification"
   })
   notifications!: any[];
-  /// ============================================================ ///
-
 
   @Prop({
     type: String,
@@ -219,6 +217,22 @@ export class User {
     cast: "Something with wrong with the jobseeker languages"
   })
   languages!: Languages[];
+
+  @Prop({
+    type: [Types.ObjectId],
+    default: undefined,
+    cast: "Something with wrong with the favorites"
+  })
+  favorites!: Types.ObjectId[];
+
+  // y / n
+  @Prop({
+    type: String,
+    length: [1, 'isHidden must be 1 character'],
+    trim: true,
+    cast: "Something with wrong with the isHidden"
+  })
+  isHidden!: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

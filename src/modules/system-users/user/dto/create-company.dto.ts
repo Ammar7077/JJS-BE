@@ -15,6 +15,7 @@ import { PasswordContainsNumbers } from 'src/shared/decorators/validation/passwo
 import { PasswordContainsSpecialCharacter } from 'src/shared/decorators/validation/password/special-characters.decorator';
 import { PasswordContainsUppercaseLetter } from 'src/shared/decorators/validation/password/uppercase-letters.decorator';
 import { Unique } from 'src/shared/decorators/validation/unique-property.decorator';
+import { Favorites } from 'src/shared/interfaces/favorite.interface';
 
 export class CreateCompanyDto {
 
@@ -256,4 +257,37 @@ export class CreateCompanyDto {
   })
   @IsOptional()
   wantedPositions: string[] = [];
+
+
+  @ApiProperty({
+    description: 'Jobseekers favorites',
+    examples: [
+      {
+        "id": "8415851845815",
+        "name": "Ammar Omari",
+        "email": "ammarEmail@gmail.com",
+      },
+      {
+        "id": "8415851845815",
+        "name": "Ammar Omari",
+        "email": "ammarEmail@gmail.com",
+      }],
+    name: 'favorites',
+    required: false,
+    type: 'Array',
+  })
+  @IsOptional()
+  readonly favorites: Favorites[] = []
+  
+  
+  @ApiProperty({
+    description: 'Company is Hidden',
+    example: 'y OR n',
+    name: 'isHidden',
+    required: false,
+    type: 'String',
+  })
+  @IsString()
+  @IsOptional()
+  readonly isHidden: string = "y";
 }
