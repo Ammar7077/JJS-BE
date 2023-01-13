@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Position, PositionSchema } from 'src/shared/entities/position.entity';
+import { Skill, SkillSchema } from 'src/shared/entities/skill.entity';
 import { User, UserSchema } from './entities/user.entity';
-import { popularSkillsSchema } from 'src/modules/popular-skills/entities/popular-skill.entity';
-import { popularPositionsSchema } from 'src/modules/popular-positions/entities/popular-position.entity';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 @Module({
   controllers: [UserController],
@@ -15,10 +15,10 @@ import { popularPositionsSchema } from 'src/modules/popular-positions/entities/p
         name: User.name,
         schema: UserSchema,
       },
-      { name: 'popular-skills', schema: popularSkillsSchema },
-      { name: 'popular-positions', schema: popularPositionsSchema }
+      { name: Position.name, schema: PositionSchema },
+      { name: Skill.name, schema: SkillSchema },
     ]),
   ],
-  exports: [MongooseModule, UserService]
+  exports: [MongooseModule, UserService],
 })
 export class UserModule {}

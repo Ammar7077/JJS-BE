@@ -1,14 +1,24 @@
-import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-// import * as moment from 'moment';
 import { Model, Types } from 'mongoose';
-import { PopularPositionsDocument } from 'src/modules/popular-positions/entities/popular-position.entity';
-import { PopularSkillsDocument } from 'src/modules/popular-skills/entities/popular-skill.entity';
 import { emptyDocument } from 'src/shared/db-error-handling/empty-document.middleware';
+import {
+  PositionDocument,
+  Position,
+} from 'src/shared/entities/position.entity';
+import { Skill, SkillDocument } from 'src/shared/entities/skill.entity';
+
 import { Role } from 'src/shared/enums/role.enum';
 import {
   checkArrayNullability,
-  checkNullability
+  checkNullability,
+  checkObjectNullability,
 } from 'src/shared/util/check-nullability.util';
 import { cleanObject } from 'src/shared/util/clean-object.util';
 import { FavoritesDto } from './dto/favorites.dto';
@@ -21,10 +31,13 @@ import { UserDocument, User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
-    @InjectModel('popular-skills') private readonly popularSkillsModel: Model<PopularSkillsDocument>,
-    @InjectModel('popular-positions') private readonly popularPositionsModel: Model<PopularPositionsDocument>
-  ) { }
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Skill.name)
+    private readonly SkillModel: Model<SkillDocument>,
+    @InjectModel(Position.name)
+    private readonly PositionModel: Model<PositionDocument>,
+  ) {}
 
   async findAll(): Promise<User[]> {
     return this.userModel.find();
@@ -32,14 +45,22 @@ export class UserService {
 
   async getAllCompanies(): Promise<User[]> {
     return this.userModel.find({
-      role: Role.Company
+      role: Role.Company,
     });
   }
 
   async getAllJobseekers(): Promise<User[]> {
     return this.userModel.find({
-      role: Role.Jobseeker
+      role: Role.Jobseeker,
     });
+  }
+
+  findSkills() {
+    return this.SkillModel.find();
+  }
+
+  findPositions() {
+    return this.PositionModel.find();
   }
 
   async findOneByEmail(email: string): Promise<User> {
@@ -59,68 +80,131 @@ export class UserService {
     return user;
   }
 
-  async hideUsersByAdmin(userID: Types.ObjectId, isHidden): Promise<User | null> {
+  async hideUsersByAdmin(
+    userID: Types.ObjectId,
+    isHidden,
+  ): Promise<User | null> {
     const update = await this.userModel.findByIdAndUpdate(userID, isHidden);
     emptyDocument(update, 'user');
     return update;
   }
 
-  async updateCompanyProfile(userID: Types.ObjectId, updateCompanyProfileDto: UpdateCompanyProfileDto): Promise<User | null> {
-    const update = await this.userModel.findByIdAndUpdate(userID, { ...updateCompanyProfileDto, role: Role.Company });
+  async updateCompanyProfile(
+    userID: Types.ObjectId,
+    updateCompanyProfileDto: UpdateCompanyProfileDto,
+  ): Promise<User | null> {
+    const update = await this.userModel.findByIdAndUpdate(userID, {
+      ...updateCompanyProfileDto,
+      role: Role.Company,
+    });
     emptyDocument(update, 'user');
     return update;
   }
 
-  async updateJobseekerProfile(userID: Types.ObjectId, updateJobseekerProfileDto: UpdateJobseekerProfileDto): Promise<User | null> {
-    const update = await this.userModel.findByIdAndUpdate(userID, { ...updateJobseekerProfileDto, role: Role.Jobseeker });
+  async updateJobseekerProfile(
+    userID: Types.ObjectId,
+    updateJobseekerProfileDto: UpdateJobseekerProfileDto,
+  ): Promise<User | null> {
+    const update = await this.userModel.findByIdAndUpdate(userID, {
+      ...updateJobseekerProfileDto,
+      role: Role.Jobseeker,
+    });
     emptyDocument(update, 'user');
     return update;
   }
 
-  async addToFavorites(userID: Types.ObjectId, loggedInUser: Types.ObjectId): Promise<Object | null> {
+  async addToFavorites(
+    userID: Types.ObjectId,
+    loggedInUser: Types.ObjectId,
+  ): Promise<Object | null> {
     const user = await this.userModel.findById(loggedInUser);
-    
-    if(!user.favorites.includes(userID)) {
+
+    if (!user.favorites.includes(userID)) {
       user.favorites.push(userID);
-      return { "add to favorite": "success" };
+    } else {
+      user.favorites.splice(user.favorites.indexOf(userID), 1);
     }
-    return { "ID existes": "User already added" };
+    await user.save();
+    return { 'ID existes': 'User already added' };
   }
 
-  async deleteFromFavorites(userID: Types.ObjectId, body: FavoritesDto): Promise<Object | null> {
-    const add = await this.userModel.findByIdAndUpdate(userID, { favorites: { id: body.id } });
+  async deleteFromFavorites(
+    userID: Types.ObjectId,
+    body: FavoritesDto,
+  ): Promise<Object | null> {
+    const add = await this.userModel.findByIdAndUpdate(userID, {
+      favorites: { id: body.id },
+    });
     emptyDocument(add, 'user');
-    return { "deleted from favorite": "success" };
+    return { 'deleted from favorite': 'success' };
   }
 
-  async updateAndAddNewSkill(id: Types.ObjectId, updateJobseekerSkillsDto: UpdateJobseekerSkillsDto): Promise<any> {
+  async updateAndAddNewSkill(
+    id: Types.ObjectId,
+    updateJobseekerSkillsDto: UpdateJobseekerSkillsDto,
+  ): Promise<any> {
     const { skillName, skillValue, isDeleted } = updateJobseekerSkillsDto;
     try {
       new Types.ObjectId(`${id}`);
     } catch (err) {
-      return { "wrong id": id };
+      return { 'wrong id': id };
     }
     const updateSkill = await this.userModel
       .findByIdAndUpdate(id, {
         $push: {
           skills: {
-            skillName: skillName,
-            skillValue: skillValue,
-            skillDate: new Date,
-            isDeleted: isDeleted
-          }
-        }
-      }).setOptions({ overwrite: false });
+            skillName,
+            skillValue,
+            skillDate: new Date(),
+            isDeleted,
+          },
+        },
+      })
+      .setOptions({ overwrite: false });
 
     if (!updateSkill) {
       Logger.log(`update skills error`);
       throw new NotFoundException();
     }
+
+    await this.addSkillsToDB(skillName);
+
     return updateSkill;
   }
 
-  async pushNotification(userID: Types.ObjectId, pushNotificationDto: PushNotificationDto): Promise<Object> {
-    const {senderID, type, senderName, title, body, location, link, interviewStart, interviewEnd, position, isAccepted } = pushNotificationDto;
+  async addSkillsToDB(skill: string) {
+    const skillObject = await this.SkillModel.findOne({ skill });
+
+    if (!checkObjectNullability(skillObject)) {
+      const newSkill = new this.SkillModel({
+        skill: skill,
+        hits: [new Date()],
+      });
+
+      await newSkill.save();
+    } else {
+      skillObject.hits.push(new Date().toString());
+      await skillObject.save();
+    }
+  }
+
+  async pushNotification(
+    userID: Types.ObjectId,
+    pushNotificationDto: PushNotificationDto,
+  ): Promise<Object> {
+    const {
+      senderID,
+      type,
+      senderName,
+      title,
+      body,
+      location,
+      link,
+      interviewStart,
+      interviewEnd,
+      position,
+      isAccepted,
+    } = pushNotificationDto;
     /// Ex.: Notification for Jobseeker about:: Having an interview/feedback and save it in the history
     /// type: interview/feedback/report/position
     const pushNotification = await this.userModel
@@ -138,9 +222,10 @@ export class UserService {
             interviewEnd: interviewEnd,
             position: position,
             isAccepted: isAccepted,
-          }
-        }
-      }).setOptions({ overwrite: false });
+          },
+        },
+      })
+      .setOptions({ overwrite: false });
     emptyDocument(pushNotification, 'user');
 
     /// Ex.: Notification for company about:: Save req interview/feedback in to Company history
@@ -159,19 +244,29 @@ export class UserService {
             interviewEnd: interviewEnd,
             position: position,
             isAccepted: isAccepted,
-          }
-        }
-      }).setOptions({ overwrite: false });
+          },
+        },
+      })
+      .setOptions({ overwrite: false });
     emptyDocument(saveInToHistory, 'user');
 
-    return { "request sent": true };
+    return { 'request sent': true };
   }
 
-
   async filterJobSeekers(query: FilterJobseekersDto): Promise<User[]> {
-    let { gender,
+    let {
+      gender,
       //  minAge, maxAge,
-      skills, months, years, positions, languages, location, typeOfWork, isRemotly, isAvailable } = query;
+      skills,
+      months,
+      years,
+      positions,
+      languages,
+      location,
+      typeOfWork,
+      isRemotly,
+      isAvailable,
+    } = query;
 
     gender = gender?.trim();
 
@@ -187,14 +282,6 @@ export class UserService {
     skills = (skills as unknown as string)?.trim().split(',') ?? [];
     positions = (positions as unknown as string)?.trim().split(',') ?? [];
     languages = (languages as unknown as string)?.trim().split(',') ?? [''];
-
-    for (let i = 0; i < skills.length; ++i) {
-      await new this.popularSkillsModel({ skills: skills[i].trim(), filterDate: new Date }).save();
-    }
-
-    for (let i = 0; i < positions.length; ++i) {
-      await new this.popularPositionsModel({ positions: positions[i].trim(), filterDate: new Date }).save();
-    }
 
     // const currentDate = new Date();
     // const dateYear = new Date(moment(`${currentDate.getFullYear() - min}/01/01`).format('yyyy-MM-DD'));
@@ -230,15 +317,17 @@ export class UserService {
 
         checkNullability(isRemotly) ? { isRemotly: { $eq: isRemotly } } : {},
 
-        checkNullability(isAvailable) ? { isAvailable: { $eq: isAvailable } } : {},
+        checkNullability(isAvailable)
+          ? { isAvailable: { $eq: isAvailable } }
+          : {},
 
         // // * Done * //
-        // { 
-        //   dob: { 
+        // {
+        //   dob: {
         //     $and: [
         //       { $gte: [ { $subtract: [ currentDate, '$dob' ] }, min ] },
         //       { $lte: [ { $subtract: [ currentDate, '$dob' ] }, max ] },
-        //     ]   
+        //     ]
         //   }
         // },
 
@@ -261,21 +350,28 @@ export class UserService {
         //     }
         // } : {},
 
+        // * Done * //
+        checkArrayNullability(skills)
+          ? { 'skills.skillName': { $in: skills } }
+          : {},
+        checkArrayNullability(skills) ? { 'skills.isDeleted': false } : {},
 
         // * Done * //
-        checkArrayNullability(skills) ? { "skills.skillName": { $in: skills } } : {},
-        checkArrayNullability(skills) ? { "skills.isDeleted": false } : {},
+        checkArrayNullability(languages)
+          ? { 'languages.langName': { $in: languages } }
+          : {},
 
         // * Done * //
-        checkArrayNullability(languages) ? { "languages.langName": { $in: languages } } : {},
+        checkArrayNullability(positions)
+          ? { wantedPositions: { $in: positions } }
+          : {},
 
         // * Done * //
-        checkArrayNullability(positions) ? { wantedPositions: { $in: positions } } : {},
-
-        // * Done * //
-        checkNullability(years) ? { "experiences.years": { $gte: years } } : {},
-        checkNullability(months) ? { "experiences.months": { $gte: months } } : {},
-      ]
+        checkNullability(years) ? { 'experiences.years': { $gte: years } } : {},
+        checkNullability(months)
+          ? { 'experiences.months': { $gte: months } }
+          : {},
+      ],
     });
     return filteredJobseekers;
   }

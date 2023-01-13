@@ -18,7 +18,6 @@ export class User {
     enum: Role,
   })
   role: Role;
-  
 
   /// ==================== name, email, phone, password, location, notifications ================= ///
   @Prop({
@@ -27,7 +26,7 @@ export class User {
     maxlength: [25, 'Name must be less than 25 characters'],
     trim: true,
     required: [true, 'Name must be provided'],
-    cast: "Something with wrong with the name"
+    cast: 'Something with wrong with the name',
   })
   name!: string; // company and jobseeker name
 
@@ -38,16 +37,16 @@ export class User {
     trim: true,
     unique: true,
     required: [true, 'Email must be provided'],
-    cast: "Something with wrong with the user email"
+    cast: 'Something with wrong with the user email',
   })
   email!: string; // company and jobseeker registration
-  
+
   @Prop({
     type: String,
     minlength: [5, 'Phone must be more than 5 numbers'],
     maxlength: [16, 'Phone must be less than 16 numbers'],
     trim: true,
-    cast: "Something with wrong with the phone number"
+    cast: 'Something with wrong with the phone number',
   })
   phone!: string; // company and jobseeker
 
@@ -55,23 +54,21 @@ export class User {
     type: String,
     required: [true, 'Password must be provided'],
     trim: true,
-    cast: "Something with wrong with the password"
+    cast: 'Something with wrong with the password',
   })
   password!: string;
 
-  
   @Prop({
     type: String,
     minlength: [2, 'location must be more than 2 characters'],
     trim: true,
-    cast: "Something with wrong with the location"
+    cast: 'Something with wrong with the location',
   })
   location!: string;
 
-
   @Prop({
     default: null,
-    cast: "Something with wrong with the notification"
+    cast: 'Something with wrong with the notification',
   })
   notifications!: any[];
 
@@ -80,7 +77,7 @@ export class User {
     minlength: [5, 'String must be more than 5 characters'],
     maxlength: [25, 'String must be less than 25 characters'],
     trim: true,
-    cast: "Something with wrong with the company user full name"
+    cast: 'Something with wrong with the company user full name',
   })
   companyUserFullName!: string; // for user company
 
@@ -89,7 +86,7 @@ export class User {
     minlength: [5, 'Phone must be more than 5 numbers'],
     maxlength: [16, 'Phone must be less than 16 numbers'],
     trim: true,
-    cast: "Something with wrong with the company user phone number"
+    cast: 'Something with wrong with the company user phone number',
   })
   companyUserPhone!: string; // company
 
@@ -98,14 +95,14 @@ export class User {
     minlength: [2, 'Name must be more than 2 characters'],
     maxlength: [25, 'Name must be less than 25 characters'],
     trim: true,
-    cast: "Something with wrong with the company name"
+    cast: 'Something with wrong with the company name',
   })
   companyType!: string;
 
   @Prop({
     type: String,
     trim: true,
-    cast: "Something with wrong with the company user phone number"
+    cast: 'Something with wrong with the company user phone number',
   })
   desc!: string;
 
@@ -113,37 +110,36 @@ export class User {
     type: String,
     minlength: [5, 'Phone must be more than 5 numbers'],
     trim: true,
-    cast: "Something with wrong with the company website"
+    cast: 'Something with wrong with the company website',
   })
   website!: string;
 
   @Prop({
     type: [String],
     default: undefined,
-    cast: "Something with wrong with the wantedPositions"
+    cast: 'Something with wrong with the wantedPositions',
   })
   wantedPositions!: string[];
-
 
   @Prop({
     type: String,
     length: [1, 'gender must be 1 character'],
     trim: true,
-    cast: "Something with wrong with the gender"
+    cast: 'Something with wrong with the gender',
   })
   gender!: string;
 
   @Prop({
     type: String,
     trim: true,
-    cast: "Something with wrong with the date"
+    cast: 'Something with wrong with the date',
   })
   dob!: string;
 
   @Prop({
     type: String,
     trim: true,
-    cast: "Something with wrong with the Bio"
+    cast: 'Something with wrong with the Bio',
   })
   bio!: string;
 
@@ -151,7 +147,7 @@ export class User {
     type: String,
     maxlength: [25, 'nationality must be less than 25 characters'],
     trim: true,
-    cast: "Something with wrong with the nationality"
+    cast: 'Something with wrong with the nationality',
   })
   nationality!: string;
 
@@ -159,7 +155,7 @@ export class User {
     type: String,
     maxlength: [40, 'education must be less than 40 characters'],
     trim: true,
-    cast: "Something with wrong with the education"
+    cast: 'Something with wrong with the education',
   })
   education!: string;
 
@@ -167,14 +163,14 @@ export class User {
   @Prop({
     type: [String],
     default: undefined,
-    cast: "Something with wrong with the company name"
+    cast: 'Something with wrong with the company name',
   })
   levelOfEducation!: string[];
 
   @Prop({
-    type: [Object],
+    type: [{ type: Object }],
     default: undefined,
-    cast: "Something with wrong with the jobseeker skills"
+    cast: 'Something with wrong with the jobseeker skills',
   })
   skills!: Skills[];
 
@@ -183,7 +179,7 @@ export class User {
     type: String,
     length: [1, 'isAvailable must be 1 character'],
     trim: true,
-    cast: "Something with wrong with the isAvailable"
+    cast: 'Something with wrong with the isAvailable',
   })
   isAvailable!: string;
 
@@ -192,7 +188,7 @@ export class User {
     type: String,
     length: [1, 'isRemotly must be 1 character'],
     trim: true,
-    cast: "Something with wrong with the isRemotly"
+    cast: 'Something with wrong with the isRemotly',
   })
   isRemotly!: string;
 
@@ -200,28 +196,28 @@ export class User {
   @Prop({
     type: [String],
     default: undefined,
-    cast: "Something with wrong with the typeOfWork"
+    cast: 'Something with wrong with the typeOfWork',
   })
   typeOfWork!: string[];
 
   @Prop({
     type: [Object],
     default: undefined,
-    cast: "Something with wrong with the jobseeker experiences"
+    cast: 'Something with wrong with the jobseeker experiences',
   })
   experiences!: Experiences[];
 
   @Prop({
     type: [Object],
     default: undefined,
-    cast: "Something with wrong with the jobseeker languages"
+    cast: 'Something with wrong with the jobseeker languages',
   })
   languages!: Languages[];
 
   @Prop({
     type: [Types.ObjectId],
     default: undefined,
-    cast: "Something with wrong with the favorites"
+    cast: 'Something with wrong with the favorites',
   })
   favorites!: Types.ObjectId[];
 
@@ -230,7 +226,7 @@ export class User {
     type: String,
     length: [1, 'isHidden must be 1 character'],
     trim: true,
-    cast: "Something with wrong with the isHidden"
+    cast: 'Something with wrong with the isHidden',
   })
   isHidden!: string;
 }
