@@ -11,7 +11,7 @@ import { i18nValidationMessage } from 'nestjs-i18n';
 import { Languages } from 'src/shared/interfaces/languages.interface';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
 import { Skills } from 'src/shared/interfaces/skills.interface';
-import { Favorites } from 'src/shared/interfaces/favorite.interface';
+import { favourites } from 'src/shared/interfaces/favorite.interface';
 export class UpdateJobseekerProfileDto {
   
   @IsString({
@@ -106,5 +106,5 @@ export class UpdateJobseekerProfileDto {
   readonly nationality: string;
 
   @IsOptional()
-  readonly favorites: Favorites[];
+  readonly favourites: favourites[];
 }

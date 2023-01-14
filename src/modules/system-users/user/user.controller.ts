@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Patch,
@@ -49,12 +48,12 @@ export class UserController {
     return this.userService.findPositions();
   }
 
-  @Get('all-companies')
+  @Get('companies')
   getAllCompanies() {
     return this.userService.getAllCompanies();
   }
 
-  @Get('all-jobseekers')
+  @Get('jobseekers')
   getAllJobseekers() {
     return this.userService.getAllJobseekers();
   }
@@ -98,14 +97,9 @@ export class UserController {
     return this.userService.updateAndAddNewSkill(id, updateJobseekerSkillsDto);
   }
 
-  @Patch('favorites/:userID')
-  addToFavorites(@Param('userID') id: Types.ObjectId, @Req() req: any) {
-    return this.userService.addToFavorites(id, req.user.sub);
-  }
-
-  @Delete('favorites/:userID')
-  deleteFromFavorites(@Param('userID') id: Types.ObjectId, @Body() body) {
-    return this.userService.deleteFromFavorites(id, body);
+  @Patch('favourite/:userID')
+  addToFavourite(@Param('userID') id: Types.ObjectId, @Req() req: any) {
+    return this.userService.addToFavourite(id, req.user.sub);
   }
 
   @Post('push-notification/:userID')

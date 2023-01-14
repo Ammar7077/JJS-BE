@@ -21,7 +21,6 @@ import {
   checkObjectNullability,
 } from 'src/shared/util/check-nullability.util';
 import { cleanObject } from 'src/shared/util/clean-object.util';
-import { FavoritesDto } from './dto/favorites.dto';
 import { FilterJobseekersDto } from './dto/filter-jobseekers.dto';
 import { PushNotificationDto } from './dto/push-notification.dto';
 import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
@@ -75,7 +74,8 @@ export class UserService {
   }
 
   async findOneByID(userID: Types.ObjectId): Promise<User | null> {
-    const user: User | null = await this.userModel.findById(userID);
+    const user = await this.userModel.findById(userID);
+    // .populate("favourite")
     emptyDocument(user, 'user');
     return user;
   }
@@ -113,31 +113,23 @@ export class UserService {
     return update;
   }
 
-  async addToFavorites(
+  async addToFavourite(
     userID: Types.ObjectId,
     loggedInUser: Types.ObjectId,
   ): Promise<Object | null> {
     const user = await this.userModel.findById(loggedInUser);
 
-    if (!user.favorites.includes(userID)) {
-      user.favorites.push(userID);
+    console.log(user.favourites);
+    
+    if (!user.favourites.includes(userID)) {
+      user.favourites.push(userID);
     } else {
-      user.favorites.splice(user.favorites.indexOf(userID), 1);
+      user.favourites.splice(user.favourites.indexOf(userID), 1);
     }
     await user.save();
-    return { 'ID existes': 'User already added' };
+    return { 'ID_existes': 'User already added' };
   }
 
-  async deleteFromFavorites(
-    userID: Types.ObjectId,
-    body: FavoritesDto,
-  ): Promise<Object | null> {
-    const add = await this.userModel.findByIdAndUpdate(userID, {
-      favorites: { id: body.id },
-    });
-    emptyDocument(add, 'user');
-    return { 'deleted from favorite': 'success' };
-  }
 
   async updateAndAddNewSkill(
     id: Types.ObjectId,

@@ -217,9 +217,9 @@ export class User {
   @Prop({
     type: [Types.ObjectId],
     default: undefined,
-    cast: 'Something with wrong with the favorites',
+    cast: 'Something with wrong with the favourites',
   })
-  favorites!: Types.ObjectId[];
+  favourites!: Types.ObjectId[];
 
   // y / n
   @Prop({

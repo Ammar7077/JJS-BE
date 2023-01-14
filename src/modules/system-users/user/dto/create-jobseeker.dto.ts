@@ -17,7 +17,7 @@ import { PasswordContainsSpecialCharacter } from 'src/shared/decorators/validati
 import { PasswordContainsUppercaseLetter } from 'src/shared/decorators/validation/password/uppercase-letters.decorator';
 import { Unique } from 'src/shared/decorators/validation/unique-property.decorator';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
-import { Favorites } from 'src/shared/interfaces/favorite.interface';
+import { favourites } from 'src/shared/interfaces/favorite.interface';
 import { Languages } from 'src/shared/interfaces/languages.interface';
 import { Skills } from 'src/shared/interfaces/skills.interface';
 
@@ -361,7 +361,7 @@ export class CreateJobseekerDto {
   readonly nationality: string = "";
 
   @ApiProperty({
-    description: 'Jobseekers favorites',
+    description: 'Jobseekers favourites',
     examples: [
       {
         "id": "8415851845815",
@@ -373,12 +373,12 @@ export class CreateJobseekerDto {
         "name": "Ammar Omari",
         "email": "ammarEmail@gmail.com",
       }],
-    name: 'favorites',
+    name: 'favourites',
     required: false,
     type: 'Array',
   })
   @IsOptional()
-  readonly favorites: Favorites[] = []
+  readonly favourites: favourites[] = []
 
   @ApiProperty({
     description: 'Jobseekers is Hidden',

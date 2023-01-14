@@ -1,6 +1,6 @@
 import { IsNumberString, IsOptional, IsString } from "class-validator";
 import { i18nValidationMessage } from "nestjs-i18n";
-import { Favorites } from "src/shared/interfaces/favorite.interface";
+import { favourites } from "src/shared/interfaces/favorite.interface";
 
 export class UpdateCompanyProfileDto {
 
@@ -42,12 +42,10 @@ export class UpdateCompanyProfileDto {
   @IsOptional()
   readonly companyType!: string;
 
-
-  @IsString()
   @IsOptional()
   readonly wantedPositions: string[];
 
 
   @IsOptional()
-  readonly favorites: Favorites[];
+  readonly favourites: favourites[];
 }
