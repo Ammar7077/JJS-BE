@@ -13,7 +13,6 @@ import {
   Position,
 } from 'src/shared/entities/position.entity';
 import { Skill, SkillDocument } from 'src/shared/entities/skill.entity';
-
 import { Role } from 'src/shared/enums/role.enum';
 import {
   checkArrayNullability,
@@ -35,8 +34,8 @@ export class UserService {
     @InjectModel(Skill.name)
     private readonly SkillModel: Model<SkillDocument>,
     @InjectModel(Position.name)
-    private readonly PositionModel: Model<PositionDocument>,
-  ) {}
+    private readonly positionModel: Model<PositionDocument>,
+  ) { }
 
   async findAll(): Promise<User[]> {
     return this.userModel.find();
@@ -59,7 +58,7 @@ export class UserService {
   }
 
   findPositions() {
-    return this.PositionModel.find();
+    return this.positionModel.find();
   }
 
   async findOneByEmail(email: string): Promise<User> {
@@ -74,9 +73,10 @@ export class UserService {
   }
 
   async findOneByID(userID: Types.ObjectId): Promise<User | null> {
-    const user = await this.userModel.findById(userID);
-    // .populate("favourite")
+    const user = await this.userModel.findById(userID)
+      .populate("favourites")
     emptyDocument(user, 'user');
+    console.log(user)
     return user;
   }
 
@@ -109,8 +109,25 @@ export class UserService {
       ...updateJobseekerProfileDto,
       role: Role.Jobseeker,
     });
+    console.log("*****************************************************************************************************")
+   await this.addPositionToDB(updateJobseekerProfileDto.wantedPositions)
     emptyDocument(update, 'user');
     return update;
+  }
+
+  async addPositionToDB(postions: string[]) {
+    for (const postion of postions) {
+        const position = await this.positionModel.findOne({ postion })
+    if (! checkNullability( position)) { 
+      const newPosition = new this.positionModel({ position, hits: [new Date()] }); 
+      await newPosition.save() 
+    }
+    else {
+      position.hits.push(new Date().toString())
+    }
+    console.log(position)
+    }
+  
   }
 
   async addToFavourite(
@@ -120,11 +137,11 @@ export class UserService {
     const user = await this.userModel.findById(loggedInUser);
 
     console.log(user.favourites);
-    
-    if (!user.favourites.includes(userID)) {
-      user.favourites.push(userID);
+
+    if (!user.favourites.includes(userID as any)) {
+      user.favourites.push(userID as any);
     } else {
-      user.favourites.splice(user.favourites.indexOf(userID), 1);
+      user.favourites.splice(user.favourites.indexOf(userID as any), 1);
     }
     await user.save();
     return { 'ID_existes': 'User already added' };

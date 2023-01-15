@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { Role } from 'src/shared/enums/role.enum';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
 import { Languages } from 'src/shared/interfaces/languages.interface';
@@ -213,13 +213,10 @@ export class User {
     cast: 'Something with wrong with the jobseeker languages',
   })
   languages!: Languages[];
+ 
 
-  @Prop({
-    type: [Types.ObjectId],
-    default: undefined,
-    cast: 'Something with wrong with the favourites',
-  })
-  favourites!: Types.ObjectId[];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+  favourites: User[];
 
   // y / n
   @Prop({
