@@ -15,10 +15,9 @@ import { PasswordContainsNumbers } from 'src/shared/decorators/validation/passwo
 import { PasswordContainsSpecialCharacter } from 'src/shared/decorators/validation/password/special-characters.decorator';
 import { PasswordContainsUppercaseLetter } from 'src/shared/decorators/validation/password/uppercase-letters.decorator';
 import { Unique } from 'src/shared/decorators/validation/unique-property.decorator';
-import { favourites } from 'src/shared/interfaces/favorite.interface';
+import { favorites } from 'src/shared/interfaces/favorite.interface';
 
 export class CreateCompanyDto {
-
   @ApiProperty({
     description: 'Companys Full name',
     example: 'Ammar Omari',
@@ -45,8 +44,6 @@ export class CreateCompanyDto {
   })
   companyUserFullName!: string;
 
-
-
   @ApiProperty({
     description: 'Companys user phone',
     example: '791234567',
@@ -72,7 +69,6 @@ export class CreateCompanyDto {
   })
   companyUserPhone!: string;
 
-  
   @ApiProperty({
     description: 'Companys Full name',
     example: 'Ammar Omari',
@@ -99,7 +95,6 @@ export class CreateCompanyDto {
   })
   name!: string;
 
-
   @ApiProperty({
     description: "Company's Email when registering",
     example: 'ammaromari@gmail.com',
@@ -125,8 +120,6 @@ export class CreateCompanyDto {
   @Unique('email')
   email!: string;
 
-
-  
   @ApiProperty({
     description: 'Companys Phone',
     example: '791234567',
@@ -152,7 +145,6 @@ export class CreateCompanyDto {
   })
   phone!: string;
 
-  
   @ApiProperty({
     description: 'Companys location',
     example: 'Amman - Jordan',
@@ -179,7 +171,6 @@ export class CreateCompanyDto {
   })
   location!: string;
 
-
   @ApiProperty({
     description: 'Companys type',
     example: 'Solutions',
@@ -205,7 +196,6 @@ export class CreateCompanyDto {
     }),
   })
   companyType!: string;
-
 
   @ApiProperty({
     description: 'Company password when registering',
@@ -245,8 +235,6 @@ export class CreateCompanyDto {
   @PasswordContainsUppercaseLetter()
   password!: string;
 
-
-
   @ApiProperty({
     description: 'Company wantedPositions',
     examples: ['position 1', 'position 2'],
@@ -258,28 +246,27 @@ export class CreateCompanyDto {
   @IsOptional()
   wantedPositions: string[] = [];
 
-
   @ApiProperty({
-    description: 'Jobseekers favourites',
+    description: 'Jobseekers favorites',
     examples: [
       {
-        "id": "8415851845815",
-        "name": "Ammar Omari",
-        "email": "ammarEmail@gmail.com",
+        id: '8415851845815',
+        name: 'Ammar Omari',
+        email: 'ammarEmail@gmail.com',
       },
       {
-        "id": "8415851845815",
-        "name": "Ammar Omari",
-        "email": "ammarEmail@gmail.com",
-      }],
-    name: 'favourites',
+        id: '8415851845815',
+        name: 'Ammar Omari',
+        email: 'ammarEmail@gmail.com',
+      },
+    ],
+    name: 'favorites',
     required: false,
     type: 'Array',
   })
   @IsOptional()
-  readonly favourites: favourites[] = []
-  
-  
+  readonly favorites: favorites[] = [];
+
   @ApiProperty({
     description: 'Company is Hidden',
     example: 'y OR n',
@@ -289,5 +276,5 @@ export class CreateCompanyDto {
   })
   @IsString()
   @IsOptional()
-  readonly isHidden: string = "y";
+  readonly isHidden: string = 'y';
 }

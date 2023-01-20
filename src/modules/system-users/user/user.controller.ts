@@ -97,9 +97,9 @@ export class UserController {
     return this.userService.updateAndAddNewSkill(id, updateJobseekerSkillsDto);
   }
 
-  @Patch('favourite/:userID')
-  addToFavourite(@Param('userID') id: Types.ObjectId, @Req() req: any) {
-    return this.userService.addToFavourite(id, req.user.sub);
+  @Patch('favorite/:userID')
+  addToFavorite(@Param('userID') id: Types.ObjectId, @Req() req: any) {
+    return this.userService.addToFavorite(id, req.user.sub);
   }
 
   @Post('push-notification/:userID')

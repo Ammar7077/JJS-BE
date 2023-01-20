@@ -1,52 +1,52 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 export class FilterJobseekersDto {
   @IsOptional()
   @IsString()
-  readonly gender?: string
+  readonly gender?: string;
 
   @IsOptional()
   @IsString()
-  readonly minAge?: string
+  readonly minAge?: string;
 
   @IsOptional()
   @IsString()
-  readonly maxAge?: string
+  readonly maxAge?: string;
 
   @IsOptional()
-  readonly skills?: string[]
-
-  @ApiProperty()
-  @IsOptional()
-  readonly years?: number
+  readonly skills?: string[];
 
   @ApiProperty()
   @IsOptional()
-  readonly months?: number
+  readonly years?: number;
 
   @ApiProperty()
   @IsOptional()
-  readonly positions?: string[]
+  readonly months?: number;
 
   @ApiProperty()
   @IsOptional()
-  readonly languages?: string[]
+  readonly positions?: string[];
+
+  @ApiProperty()
+  @IsOptional()
+  readonly languages?: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  readonly location?: string
+  readonly location?: string;
 
   @ApiProperty()
   @IsOptional()
-  readonly typeOfWork?: string
+  readonly typeOfWork?: string;
 
   @ApiProperty()
   @IsOptional()
-  readonly isRemotly?: string
+  readonly isRemotly?: string;
 
   @ApiProperty()
   @IsOptional()
-  readonly isAvailable?: string
+  readonly isAvailable?: string;
 }

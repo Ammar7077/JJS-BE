@@ -15,7 +15,6 @@ export class Skill extends Document {
     cast: 'Something Went wrong with the skill name',
     trim: true,
     unique: true,
-    lowercase: true,
   })
   skill: string;
 

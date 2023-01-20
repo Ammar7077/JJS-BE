@@ -35,7 +35,7 @@ export class UserService {
     private readonly SkillModel: Model<SkillDocument>,
     @InjectModel(Position.name)
     private readonly positionModel: Model<PositionDocument>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<User[]> {
     return this.userModel.find();
@@ -73,10 +73,8 @@ export class UserService {
   }
 
   async findOneByID(userID: Types.ObjectId): Promise<User | null> {
-    const user = await this.userModel.findById(userID)
-      .populate("favourites")
+    const user = await this.userModel.findById(userID).populate('favorites');
     emptyDocument(user, 'user');
-    console.log(user)
     return user;
   }
 
@@ -109,44 +107,42 @@ export class UserService {
       ...updateJobseekerProfileDto,
       role: Role.Jobseeker,
     });
-    console.log("*****************************************************************************************************")
-   await this.addPositionToDB(updateJobseekerProfileDto.wantedPositions)
+
+    await this.addPositionToDB(updateJobseekerProfileDto.wantedPositions);
     emptyDocument(update, 'user');
     return update;
   }
 
-  async addPositionToDB(postions: string[]) {
-    for (const postion of postions) {
-        const position = await this.positionModel.findOne({ postion })
-    if (! checkNullability(position)) {
-      const newPosition = new this.positionModel({ wantedPositions: position, hits: [new Date()] }); 
-      await newPosition.save() 
+  async addPositionToDB(positions: string[]) {
+    if (!checkArrayNullability(positions)) return;
+    for (const position of positions) {
+      const positionObj = await this.positionModel.findOne({ position });
+      if (!checkNullability(positionObj)) {
+        const newPosition = new this.positionModel({
+          position,
+          hits: [new Date().toString()],
+        });
+        await newPosition.save();
+      } else {
+        positionObj.hits.push(new Date().toString());
+      }
     }
-    else {
-      position.hits.push(new Date().toString())
-    }
-    console.log(position)
-    }
-  
   }
 
-  async addToFavourite(
+  async addToFavorite(
     userID: Types.ObjectId,
     loggedInUser: Types.ObjectId,
   ): Promise<Object | null> {
     const user = await this.userModel.findById(loggedInUser);
 
-    console.log(user.favourites);
-
-    if (!user.favourites.includes(userID as any)) {
-      user.favourites.push(userID as any);
+    if (!user.favorites.includes(userID as any)) {
+      user.favorites.push(userID as any);
     } else {
-      user.favourites.splice(user.favourites.indexOf(userID as any), 1);
+      user.favorites.splice(user.favorites.indexOf(userID as any), 1);
     }
     await user.save();
-    return { 'ID_existes': 'User already added' };
+    return { ID_existes: 'User already added' };
   }
-
 
   async updateAndAddNewSkill(
     id: Types.ObjectId,
@@ -209,31 +205,33 @@ export class UserService {
       body,
       location,
       link,
-      interviewStart,
-      interviewEnd,
+      interviewTime,
       position,
       isAccepted,
     } = pushNotificationDto;
     /// Ex.: Notification for Jobseeker about:: Having an interview/feedback and save it in the history
     /// type: interview/feedback/report/position
+
     const pushNotification = await this.userModel
-      .findByIdAndUpdate(userID, {
-        $push: {
-          notifications: {
-            senderID: senderID,
-            type: type,
-            senderName: senderName,
-            title: title,
-            body: body,
-            location: location,
-            link: link,
-            interviewStart: interviewStart,
-            interviewEnd: interviewEnd,
-            position: position,
-            isAccepted: isAccepted,
+      .findByIdAndUpdate(
+        type === 'report' ? '63c9e325f1facfde08f080f3' : userID,
+        {
+          $push: {
+            notifications: {
+              senderID,
+              type,
+              senderName,
+              title,
+              body,
+              location,
+              link: link,
+              interviewTime,
+              position,
+              isAccepted,
+            },
           },
         },
-      })
+      )
       .setOptions({ overwrite: false });
     emptyDocument(pushNotification, 'user');
 
@@ -244,15 +242,15 @@ export class UserService {
           notifications: {
             senderID: userID,
             type: type,
-            senderName: senderName,
-            title: title,
-            body: body,
-            location: location,
-            link: link,
-            interviewStart: interviewStart,
-            interviewEnd: interviewEnd,
-            position: position,
-            isAccepted: isAccepted,
+            senderName,
+            title,
+            body,
+            location,
+            link,
+            interviewTime,
+
+            position,
+            isAccepted,
           },
         },
       })
@@ -288,9 +286,9 @@ export class UserService {
     years = Number(years);
     location = location?.trim();
     typeOfWork = typeOfWork?.trim();
-    skills = (skills as unknown as string)?.trim().split(',') ?? [];
+    skills = (skills as unknown as string)?.split(',') ?? [];
     positions = (positions as unknown as string)?.trim().split(',') ?? [];
-    languages = (languages as unknown as string)?.trim().split(',') ?? [''];
+    languages = languages.trim();
 
     // const currentDate = new Date();
     // const dateYear = new Date(moment(`${currentDate.getFullYear() - min}/01/01`).format('yyyy-MM-DD'));
@@ -314,15 +312,20 @@ export class UserService {
     const filteredJobseekers = await this.userModel.find({
       $and: [
         { role: Role.Jobseeker },
+        { isHidden: false },
 
         // * Done * //
         checkNullability(gender) ? { gender: { $eq: gender } } : {},
 
         // * Done * //
-        checkNullability(location) ? { location: { $eq: location } } : {},
+        checkNullability(location)
+          ? { location: { $regex: location, $options: 'i' } }
+          : {},
 
         // * Done * //
-        checkNullability(typeOfWork) ? { typeOfWork: { $eq: typeOfWork } } : {},
+        checkNullability(typeOfWork)
+          ? { typeOfWork: { $in: typeOfWork.split(',') } }
+          : {},
 
         checkNullability(isRemotly) ? { isRemotly: { $eq: isRemotly } } : {},
 
@@ -330,44 +333,18 @@ export class UserService {
           ? { isAvailable: { $eq: isAvailable } }
           : {},
 
-        // // * Done * //
-        // {
-        //   dob: {
-        //     $and: [
-        //       { $gte: [ { $subtract: [ currentDate, '$dob' ] }, min ] },
-        //       { $lte: [ { $subtract: [ currentDate, '$dob' ] }, max ] },
-        //     ]
-        //   }
-        // },
-
-        // {
-        //   $expr: {
-        //     $and: [
-        //       { $gte: [{ $divide: [{ $subtract: [moment().toDate(), '$dob'] }, 31536000000] }, min] },
-        //       { $lte: [{ $divide: [{ $subtract: [moment().toDate(), '$dob'] }, 31536000000] }, max] },
-        //     ],
-        //   },
-        // },
-
-        // min != 0 && max != 0 ?
-        // {
-        //   dob:
-        //     {
-        //       $gt: {
-        //         $subtract: [thisYear, "$dob"]
-        //       }, $lt: [thisYear, "$dob"]
-        //     }
-        // } : {},
-
         // * Done * //
         checkArrayNullability(skills)
-          ? { 'skills.skillName': { $in: skills } }
+          ? {
+              'skills.skillName': {
+                $all: skills,
+              },
+            }
           : {},
-        checkArrayNullability(skills) ? { 'skills.isDeleted': false } : {},
 
         // * Done * //
         checkArrayNullability(languages)
-          ? { 'languages.langName': { $in: languages } }
+          ? { languages: { $regex: languages, $options: 'i' } }
           : {},
 
         // * Done * //
@@ -376,7 +353,13 @@ export class UserService {
           : {},
 
         // * Done * //
-        checkNullability(years) ? { 'experiences.years': { $gte: years } } : {},
+        checkNullability(years)
+          ? {
+              'experiences.years': {
+                $gte: years,
+              },
+            }
+          : {},
         checkNullability(months)
           ? { 'experiences.months': { $gte: months } }
           : {},

@@ -56,10 +56,10 @@ async function bootstrap() {
 
   await app.listen(configService.get('PORT') || 3000);
 
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
+  // if (module.hot) {
+  //   module.hot.accept();
+  //   module.hot.dispose(() => app.close());
+  // }
 }
 bootstrap();
 

@@ -1,8 +1,7 @@
-import { IsNumberString, IsOptional, IsString } from "class-validator";
-import { i18nValidationMessage } from "nestjs-i18n";
+import { IsNumberString, IsOptional, IsString } from 'class-validator';
+import { i18nValidationMessage } from 'nestjs-i18n';
 
-export class favouritesDto {
-  
+export class favoritesDto {
   @IsString()
   @IsOptional()
   readonly id!: string;

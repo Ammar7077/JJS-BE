@@ -213,19 +213,17 @@ export class User {
     cast: 'Something with wrong with the jobseeker languages',
   })
   languages!: Languages[];
- 
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  favourites: User[];
+  favorites: User[];
 
   // y / n
   @Prop({
-    type: String,
-    length: [1, 'isHidden must be 1 character'],
-    trim: true,
+    type: Boolean,
     cast: 'Something with wrong with the isHidden',
+    default: false,
   })
-  isHidden!: string;
+  isHidden!: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

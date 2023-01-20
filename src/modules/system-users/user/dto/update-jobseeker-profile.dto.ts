@@ -11,9 +11,8 @@ import { i18nValidationMessage } from 'nestjs-i18n';
 import { Languages } from 'src/shared/interfaces/languages.interface';
 import { Experiences } from 'src/shared/interfaces/experiences.interface';
 import { Skills } from 'src/shared/interfaces/skills.interface';
-import { favourites } from 'src/shared/interfaces/favorite.interface';
+import { favorites } from 'src/shared/interfaces/favorite.interface';
 export class UpdateJobseekerProfileDto {
-  
   @IsString({
     message: i18nValidationMessage('validation.isString', {
       property: 'Full Name',
@@ -35,33 +34,33 @@ export class UpdateJobseekerProfileDto {
   })
   @IsOptional()
   readonly phone!: string;
-  
+
   @IsString()
   @IsOptional()
   readonly dob!: string;
-  
-  @IsIn(["m", "f"])
+
+  @IsIn(['m', 'f'])
   @IsString()
   @Length(1)
   @IsOptional()
   readonly gender!: string;
-  
+
   @IsString()
   @IsOptional()
   readonly bio: string;
 
   @IsOptional()
   readonly wantedPositions: string[];
-  
-  @IsOptional()
-  readonly languages: Languages[]
 
   @IsOptional()
-  readonly experiences: Experiences[]
-    
+  readonly languages: Languages[];
+
   @IsOptional()
-  readonly typeOfWork: string[]
-  
+  readonly experiences: Experiences[];
+
+  @IsOptional()
+  readonly typeOfWork: string[];
+
   @IsString()
   @IsOptional()
   readonly isRemotly: string;
@@ -71,17 +70,17 @@ export class UpdateJobseekerProfileDto {
   readonly isAvailable: string;
 
   @IsOptional()
-  readonly skills: Skills[]
+  readonly skills: Skills[];
 
   @ApiProperty({
     description: 'Jobseekers skills',
-    examples: ['master', 'Dr.','Student'],
+    examples: ['master', 'Dr.', 'Student'],
     name: 'skills',
     required: false,
     type: 'string',
   })
   @IsOptional()
-  readonly levelOfEducation: string[]
+  readonly levelOfEducation: string[];
 
   @ApiProperty({
     description: 'Jobseekers education',
@@ -106,5 +105,5 @@ export class UpdateJobseekerProfileDto {
   readonly nationality: string;
 
   @IsOptional()
-  readonly favourites: favourites[];
+  readonly favorites: favorites[];
 }
