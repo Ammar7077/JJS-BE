@@ -20,7 +20,7 @@ export class AuthService {
     // * Services
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async registerJobseeker(createJobseekerDto: CreateJobseekerDto): Promise<ReturnMessage> {
     const user = new this.userModel(createJobseekerDto);
@@ -31,6 +31,7 @@ export class AuthService {
   async registerCompany(createCompanyDto: CreateCompanyDto): Promise<ReturnMessage> {
     const user = new this.userModel(createCompanyDto);
     user.role = Role.Company;
+    user.isHidden = true;
     return await registerUser(user);
   }
 

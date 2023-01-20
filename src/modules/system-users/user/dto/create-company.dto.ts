@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsNumberString,
@@ -268,14 +267,4 @@ export class CreateCompanyDto {
   @IsOptional()
   readonly favorites: favorites[] = [];
 
-  @ApiProperty({
-    description: 'Company is Hidden',
-    example: 'true or false',
-    name: 'isHidden',
-    required: false,
-    type: 'boolean',
-  })
-  @IsBoolean()
-  @IsOptional()
-  readonly isHidden: boolean = true;
 }
