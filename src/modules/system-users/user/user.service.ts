@@ -118,8 +118,8 @@ export class UserService {
   async addPositionToDB(postions: string[]) {
     for (const postion of postions) {
         const position = await this.positionModel.findOne({ postion })
-    if (! checkNullability( position)) { 
-      const newPosition = new this.positionModel({ position, hits: [new Date()] }); 
+    if (! checkNullability(position)) {
+      const newPosition = new this.positionModel({ wantedPositions: position, hits: [new Date()] }); 
       await newPosition.save() 
     }
     else {

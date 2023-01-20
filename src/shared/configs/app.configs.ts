@@ -2,7 +2,6 @@ import { DocumentBuilder } from '@nestjs/swagger';
 import {
   GlobalCustomExceptionInterceptor,
   GlobalCustomExceptionFilter,
-  GlobalThrottlerGuard,
   GlobalJwtAuthGuard,
 } from '../constants/app-constants';
 
@@ -10,10 +9,10 @@ export const GlobalInterceptors = [GlobalCustomExceptionInterceptor];
 
 export const GlobalFilters = [GlobalCustomExceptionFilter];
 
-export const GlobalGuards = [GlobalThrottlerGuard, GlobalJwtAuthGuard];
+export const GlobalGuards = [GlobalJwtAuthGuard];
 
 export const SwaggerConfig = new DocumentBuilder()
-  .setTitle('Nestjs Skeleton')
+  .setTitle('Nestjs')
   .setDescription('Feel free to clone and use it!')
   .setVersion('1.0')
   .addBearerAuth(

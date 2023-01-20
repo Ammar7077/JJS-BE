@@ -75,7 +75,7 @@ export class UpdateJobseekerProfileDto {
 
   @ApiProperty({
     description: 'Jobseekers skills',
-    examples: ['nodejs', 'nestjs'],
+    examples: ['master', 'Dr.','Student'],
     name: 'skills',
     required: false,
     type: 'string',
