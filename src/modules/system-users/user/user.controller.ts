@@ -22,7 +22,7 @@ import { UserService } from './user.service';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @ApiOkResponse({
     status: 200 || 201,
@@ -64,8 +64,8 @@ export class UserController {
   }
 
   @Patch('admin-hide-users/:userID')
-  hideUsersByAdmin(@Param('userID') userID: Types.ObjectId, @Body() isHidden) {
-    return this.userService.hideUsersByAdmin(userID, isHidden);
+  hideUsersByAdmin(@Param('userID') userID: Types.ObjectId) {
+    return this.userService.hideUsersByAdmin(userID);
   }
 
   @Patch('update-company-profile/:userID')

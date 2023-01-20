@@ -35,7 +35,7 @@ export class UserService {
     private readonly SkillModel: Model<SkillDocument>,
     @InjectModel(Position.name)
     private readonly positionModel: Model<PositionDocument>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<User[]> {
     return this.userModel.find();
@@ -80,10 +80,11 @@ export class UserService {
 
   async hideUsersByAdmin(
     userID: Types.ObjectId,
-    isHidden,
   ): Promise<User | null> {
-    const update = await this.userModel.findByIdAndUpdate(userID, isHidden);
+    const update = await this.userModel.findById(userID);
     emptyDocument(update, 'user');
+    update.isHidden = !update.isHidden;
+    await update.save()
     return update;
   }
 
@@ -336,10 +337,10 @@ export class UserService {
         // * Done * //
         checkArrayNullability(skills)
           ? {
-              'skills.skillName': {
-                $all: skills,
-              },
-            }
+            'skills.skillName': {
+              $all: skills,
+            },
+          }
           : {},
 
         // * Done * //
@@ -355,10 +356,10 @@ export class UserService {
         // * Done * //
         checkNullability(years)
           ? {
-              'experiences.years': {
-                $gte: years,
-              },
-            }
+            'experiences.years': {
+              $gte: years,
+            },
+          }
           : {},
         checkNullability(months)
           ? { 'experiences.months': { $gte: months } }
